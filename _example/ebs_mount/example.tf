@@ -170,10 +170,14 @@ module "ec2" {
   ]
 
   #EBS Volume
-  ebs_optimized      = false
-  ebs_volume_enabled = true
-  ebs_volume_type    = "gp2"
-  ebs_volume_size    = 30
+  ebs_block_device = [
+    {
+      ebs_optimized      = false
+      ebs_volume_enabled = true
+      ebs_volume_type    = "gp2"
+      ebs_volume_size    = 30
+    }
+  ]
 
   #DNS
   dns_enabled = false

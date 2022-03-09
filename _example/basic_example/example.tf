@@ -45,7 +45,7 @@ module "keypair" {
   source  = "clouddrove/keypair/aws"
   version = "0.15.0"
 
-  public_key      = "ssh-rsa /5sw7eCjbjO5d20kqCTdvcW/J0J++mRiGHZULA0FysjNrK3wqqawb91//saHkXGjQHm0pueiAODiqSoM3u3MGJb2qX5o/CFtFlPZWLqVLlk1q+zeb/yWOWV42zsQ+X+Glh7ynqnYfIzyQT7Bs0xBv95RBQabsjhYfi9OgImLyN6OZtpMev2T1l90DW2DjZp1iqAXvXQuFLJu0ygNpMlK4Ot6ZhahzgBCPy6oVvaPIHzWpRGt7iBiSZB1QYXnlYQ0VcN6LHZk2oq1Jjjd0yDMzO71onIcd8P7qCwlUhis7Yeq5B+3nzZce9G3lSptwHnKG3CDByemUdXp4WKhYpsixQHImgrZjXvLJVyMDP5RSJp57BxxAw1CbjmWAbuAAR6BpOceLxYwsEscmYPyPISZMFLhge56TX4mqTSSX+fBtBEPC4hbqMdZAW9boHqoBChqffOdnUe3NFT0BuxqwsUbqBCx/AWBop5ASSds4rN6cdROml+UvlSrrAp3htSaBafrE+9x1sLG7P9R97xZGFTTlfZoJcXHZ/405EdsOcU8k2WZOJOrrf3R4995AQsotSB6vqia/rFaXtzDPGLaJqUkluzH7RPRYYKG2PqVJuXkMOLA0i/JNTGwNO14UDK+qBnWiwQeZzfJeHqJXy1eNMMZJVMDLn/qEUezhJjuCOIF1kYJclHmCZtd07y4R4B3/vOYdknuwughecV3iBxF+pAzy8MckPaZVaR+dHoyNoD4ua9eIVDF71aXnqBHd2B3n1o4+3Jd2axyOV1uFP8jhpMeVaesTA+K+/oW8Bq+52c+1rpdySU5aozOJEncyolC+DLEgRYGuAaiXNIR/IZFsDJHD+GByMtopPzu4kvGbyRZp/I0u43MMDlcjCTZJLhVntrI1spgTMElFcFepS5piL062xwY8S/gFAB3TJH4Rx+fcOkYsRh9wb4gJ0Wy+d7sHVu2qLYgBCeeSYBR4DLRTv57gcgE9hdaBo7b2AXPevPV3LbUGuqDkF+pEHOdMPCTgW4lOFxfl6vpitP+o8kErNdt8T8ftwJccHv5x6NLI82lUMfdo8qIV devops"
+  public_key      = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDLbkgVCxhs3oI0Cz/0AEjAQ+/wZryh/C9mcDEMraRO/HYCSR4CkALDklRUL0bejf8Jfdi58Poakox55bBfoAIA/9AR8F6mK7iyLigyTT1VJGBqqaczCJAcW1Cd2dcIGAxyNaxl8FhAMIh69MRYKZqVi1SC73RTd3v4YZW2F6OGz6WlPnQrL2E0iLmybiH1qJH9zt3VIYOxhlw8xB2EwHNGqxFU9amTBsN+jhUHHvcdLGqMQ3sGxfvLymaesX/a/MR+Au7c6MFCQ1T1mxkBFfDgsRQNLvKW3o8U8T2tGJ15G24SvTvVwAKJSu0WkwwIAW+KF8RvJj1n1P1Rj+VXQSo4V0O2omd33OlzZmAucGKQF1l48uya9Im9n5Zmqk6UxhESBIP6G8GI/FduGpPwOm/xjxalmBilZ1RnIf96QwMnoRbZsS6rE1371FqFJwh6A/TEX+m0wHsGu/Sg1V8jVEe64AEGGUy9maWPMpMB9PqnnzIs4X9ndmuKkTqZbhUMV7M= mahesh@mahesh"
   key_name        = "devops"
   environment     = "test"
   label_order     = ["name", "environment"]
@@ -69,7 +69,7 @@ module "iam-role" {
   source  = "clouddrove/iam-role/aws"
   version = "0.15.0"
 
-  name               = "iam-role"
+  name               = "iam-role-mahesh"
   environment        = "test"
   label_order        = ["name", "environment"]
   assume_role_policy = data.aws_iam_policy_document.default.json
@@ -134,13 +134,13 @@ data "aws_iam_policy_document" "iam-policy" {
 
 module "ec2" {
   source      = "./../../"
-  name        = "ec2"
-  environment = "test"
+  name        = "ec2-mahesh"
+  environment = "test-ec2"
   label_order = ["name", "environment"]
 
   #instance
   instance_enabled = true
-  instance_count   = 2
+  instance_count   = 1
   ami              = "ami-08d658f84a6d84a80"
   instance_type    = "t2.nano"
   monitoring       = false

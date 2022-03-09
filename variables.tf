@@ -147,6 +147,11 @@ variable "root_block_device" {
   description = "Customize details about the root block device of the instance. See Block Devices below for details."
 }
 
+variable "delete_on_termination" {
+  type    = bool
+  default = false
+}
+
 variable "user_data" {
   type        = string
   default     = ""
@@ -166,6 +171,11 @@ variable "ebs_iops" {
   description = "Amount of provisioned IOPS. This must be set with a volume_type of io1."
 }
 
+variable "iops" {
+  type    = number
+  default = 0
+}
+
 variable "availability_zone" {
   type        = list(any)
   default     = []
@@ -179,16 +189,30 @@ variable "ebs_device_name" {
   description = "Name of the EBS device to mount."
 }
 
+variable "device_name" {
+  type    = list(string)
+  default = []
+}
+
 variable "ebs_volume_size" {
   type        = number
   default     = 30
   description = "Size of the EBS volume in gigabytes."
+}
+variable "volume_size" {
+  type    = number
+  default = 0
 }
 
 variable "ebs_volume_type" {
   type        = string
   default     = "gp2"
   description = "The type of EBS volume. Can be standard, gp2 or io1."
+}
+
+variable "volume_type" {
+  type    = string
+  default = ""
 }
 
 
@@ -316,6 +340,15 @@ variable "kms_key_id" {
   description = "The ARN for the KMS encryption key. When specifying kms_key_id, encrypted needs to be set to true."
   sensitive   = true
 }
+variable "encrypted" {
+  type    = bool
+  default = false
+}
+
+variable "snapshot_id" {
+  type    = string
+  default = ""
+}
 
 variable "metadata_http_tokens_required" {
   type        = string
@@ -333,4 +366,66 @@ variable "metadata_http_put_response_hop_limit" {
   type        = number
   default     = 2
   description = "The desired HTTP PUT response hop limit (between 1 and 64) for instance metadata requests."
+}
+
+variable "enclave_options" {
+  type    = list(any)
+  default = []
+}
+
+variable "hibernation" {
+  type    = bool
+  default = false
+}
+variable "secondary_private_ips" {
+  type    = list(string)
+  default = []
+}
+
+variable "user_data_base64" {
+  type    = string
+  default = ""
+}
+variable "launch_template" {
+  type    = bool
+  default = false
+}
+variable "get_password_data" {
+  type    = bool
+  default = false
+}
+variable "cpu_threads_per_core" {
+  type    = number
+  default = 0
+}
+
+variable "multi_attach_enabled" {
+  type    = bool
+  default = false
+}
+
+variable "outpost_arn" {
+  type    = string
+  default = ""
+}
+variable "enabled" {
+  type = bool
+  default = false
+}
+
+variable "http_endpoint" {
+  type = bool
+  default = false
+}
+variable "http_put_response_hop_limit" {
+  type = number
+  default = 0
+}
+variable "http_tokens" {
+  type = string
+  default = "optional"
+}
+variable "metadata_options" {
+  type = list(any)
+  default = []
 }

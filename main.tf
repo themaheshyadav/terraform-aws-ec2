@@ -59,11 +59,16 @@ resource "aws_instance" "default" {
   tenancy                              = var.tenancy
   host_id                              = var.host_id
   cpu_core_count                       = var.cpu_core_count
+  cpu_threads_per_core                 = var.cpu_threads_per_core
+  get_password_data                    = var.get_password_data
+  hibernation                          = var.hibernation
+  secondary_private_ips                = var.secondary_private_ips
   user_data                            = var.user_data
   iam_instance_profile                 = join("", aws_iam_instance_profile.default.*.name)
   source_dest_check                    = var.source_dest_check
   ipv6_address_count                   = var.ipv6_address_count
   ipv6_addresses                       = var.ipv6_addresses
+
 
   dynamic "root_block_device" {
     for_each = var.root_block_device
@@ -77,6 +82,26 @@ resource "aws_instance" "default" {
       tags = merge(module.labels.tags,
         {
           "Name" = format("%s-root-volume%s%s", module.labels.id, var.delimiter, (count.index))
+        },
+        var.tags
+      )
+    }
+  }
+
+  dynamic "ebs_block_device" {
+    for_each = var.ebs_block_device
+    content {
+      delete_on_termination = lookup(ebs_block_device.value, "delete_on_termination", null)
+      device_name           = lookup(ebs_block_device.value, "device_name", null)
+      encrypted             = var.encrypted
+      iops                  = lookup(ebs_block_device.value, "iops", null)
+      kms_key_id            = lookup(ebs_block_device.value, "kms_key_id", null)
+      snapshot_id           = lookup(ebs_block_device.value, "snapshot_id", null)
+      volume_size           = lookup(ebs_block_device.value, "volume_size", null)
+      volume_type           = lookup(ebs_block_device.value, "volume_type", null)
+      tags = merge(module.labels.tags,
+        {
+          "Name" = format("%s-ebs-volume%s%s", module.labels.id, var.delimiter, (count.index))
         },
         var.tags
       )
@@ -151,12 +176,16 @@ resource "aws_eip" "default" {
 resource "aws_ebs_volume" "default" {
   count = var.instance_enabled == true && var.ebs_volume_enabled == true ? var.instance_count : 0
 
-  availability_zone = element(aws_instance.default.*.availability_zone, count.index)
-  size              = var.ebs_volume_size
-  iops              = local.ebs_iops
-  type              = var.ebs_volume_type
-  encrypted         = true
-  kms_key_id        = var.kms_key_id
+  availability_zone    = element(aws_instance.default.*.availability_zone, count.index)
+  size                 = var.ebs_volume_size
+  iops                 = local.ebs_iops
+  type                 = var.ebs_volume_type
+  encrypted            = true
+  kms_key_id           = var.kms_key_id
+  multi_attach_enabled = var.multi_attach_enabled
+  snapshot_id          = var.snapshot_id
+  outpost_arn          = var.outpost_arn
+
   tags = merge(module.labels.tags,
     { "Name" = format("%s-ebs-volume%s%s", module.labels.id, var.delimiter, (count.index))
     },
